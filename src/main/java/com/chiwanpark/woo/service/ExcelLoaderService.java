@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 
 @Service
 public class ExcelLoaderService {
-  private Logger logger = LoggerFactory.getLogger(ExcelLoaderService.class);
-  private static Pattern POSITION_PATTERN = Pattern.compile("([0-9]+)도 ([0-9]+)분 ([0-9]+)초");
+  private static final Logger LOG = LoggerFactory.getLogger(ExcelLoaderService.class);
+  private static final Pattern POSITION_PATTERN = Pattern.compile("([0-9]+)도 ([0-9]+)분 ([0-9]+)초");
 
   public RawObservation loadExcelFile(File file) throws IOException, InvalidFormatException {
     Workbook workbook = WorkbookFactory.create(file);
@@ -45,8 +45,8 @@ public class ExcelLoaderService {
       observation.insertConductivity(new TimeSeriesDatum<>(date, row.getCell(6).getNumericCellValue()));
     }
 
-    logger.info("Data file loaded: " + file.getAbsolutePath());
-    logger.info("Count of records: " + String.valueOf(sheet.getLastRowNum() - 6) + " records");
+    LOG.info("Data file loaded: " + file.getAbsolutePath());
+    LOG.info("Count of records: " + String.valueOf(sheet.getLastRowNum() - 6) + " records");
 
     return observation;
   }
@@ -77,7 +77,7 @@ public class ExcelLoaderService {
       return new Tuple<>(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)));
     }
 
-    logger.warn("Cannot parse position data!");
+    LOG.warn("Cannot parse position data!");
     return null;
   }
 }

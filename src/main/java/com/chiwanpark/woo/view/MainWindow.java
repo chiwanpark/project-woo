@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 public class MainWindow extends JFrame {
-  private Logger logger = LoggerFactory.getLogger(MainWindow.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MainWindow.class);
 
   private JDesktopPane desktopPane;
 
@@ -55,7 +55,7 @@ public class MainWindow extends JFrame {
     item.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
-        logger.info("Open Data clicked");
+        LOG.info("Open Data clicked");
         JFileChooser fileChooser = new JFileChooser();
         FileFilter fileFilter = new FileNameExtensionFilter("Excel Files (*.xls, *.xlsx)", "xls", "xlsx");
 
@@ -64,7 +64,7 @@ public class MainWindow extends JFrame {
         int result = fileChooser.showDialog(desktopPane, "Open Data");
         if (result == JFileChooser.APPROVE_OPTION) {
           File openedFile = fileChooser.getSelectedFile();
-          logger.info("File Chosen: " + openedFile.getAbsolutePath());
+          LOG.info("File Chosen: " + openedFile.getAbsolutePath());
 
           wooController.loadExcelFile(openedFile);
         }
@@ -80,7 +80,7 @@ public class MainWindow extends JFrame {
     item.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
-        logger.info("Exit clicked!");
+        LOG.info("Exit clicked!");
         System.exit(0);
       }
     });
