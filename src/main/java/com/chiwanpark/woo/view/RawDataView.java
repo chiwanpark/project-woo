@@ -1,11 +1,9 @@
 package com.chiwanpark.woo.view;
 
-import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.model.table.RawObservationTableModel;
 
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 
 public class RawDataView extends JInternalFrame {
   private JTable tblData;
@@ -16,17 +14,16 @@ public class RawDataView extends JInternalFrame {
   private JTextField txtLatitude;
   private JTextField txtLongitude;
 
-  public RawDataView(Observation observation) {
-    super("Raw Data -" + observation.getName(), true, true, true, true);
+  public RawDataView(RawObservation rawObservation) {
+    super("Raw Data -" + rawObservation.getName(), true, true, true, true);
 
-    txtName.setText(observation.getName());
-    txtType.setText(observation.getType());
-    txtHeight.setText(String.valueOf(observation.getHeight()) + "m");
-    txtLatitude.setText(observation.getLatitude().toString("도", "분", "초"));
-    txtLongitude.setText(observation.getLongitude().toString("도", "분", "초"));
+    txtName.setText(rawObservation.getName());
+    txtType.setText(rawObservation.getType());
+    txtHeight.setText(String.valueOf(rawObservation.getHeight()) + "m");
+    txtLatitude.setText(rawObservation.getLatitude().toString("도", "분", "초"));
+    txtLongitude.setText(rawObservation.getLongitude().toString("도", "분", "초"));
 
-    TableModel tblModel = new RawObservationTableModel(observation);
-    tblData.setModel(tblModel);
+    tblData.setModel(new RawObservationTableModel(rawObservation));
 
     setContentPane(pnContents);
     setSize(640, 480);

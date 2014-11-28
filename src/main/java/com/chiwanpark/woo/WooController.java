@@ -1,6 +1,6 @@
 package com.chiwanpark.woo;
 
-import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.MainWindow;
 import com.chiwanpark.woo.view.RawDataView;
@@ -17,7 +17,7 @@ public class WooController {
 
   public void loadExcelFile(File file) {
     try {
-      Observation observation = excelLoaderService.loadExcelFile(file);
+      RawObservation observation = excelLoaderService.loadExcelFile(file);
 
       RawDataView rawDataView = new RawDataView(observation);
       mainWindow.getDesktop().add(rawDataView);

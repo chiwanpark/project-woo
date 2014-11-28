@@ -1,6 +1,7 @@
 package com.chiwanpark.woo.service;
 
-import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.RawObservation;
+import com.chiwanpark.woo.model.TimeSeriesDatum;
 import com.chiwanpark.woo.model.Tuple;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,11 +23,11 @@ public class ExcelLoaderService {
   private Logger logger = LoggerFactory.getLogger(ExcelLoaderService.class);
   private static Pattern POSITION_PATTERN = Pattern.compile("([0-9]+)도 ([0-9]+)분 ([0-9]+)초");
 
-  public Observation loadExcelFile(File file) throws IOException, InvalidFormatException {
+  public RawObservation loadExcelFile(File file) throws IOException, InvalidFormatException {
     Workbook workbook = WorkbookFactory.create(file);
     Sheet sheet = workbook.getSheetAt(0);
 
-    Observation observation = new Observation();
+    RawObservation observation = new RawObservation();
 
     observation.setName(getObservationName(sheet));
     observation.setType(getObservationType(sheet));
@@ -35,7 +36,13 @@ public class ExcelLoaderService {
     observation.setLongitude(getObservationLongitude(sheet));
 
     for (int i = 7, lastRow = sheet.getLastRowNum(); i <= lastRow; ++i) {
-      observation.insertDatum(getObservationDatum(sheet.getRow(i)));
+      Row row = sheet.getRow(i);
+
+      Date date = row.getCell(3).getDateCellValue();
+
+      observation.insertWaterLevel(new TimeSeriesDatum<>(date, row.getCell(4).getNumericCellValue()));
+      observation.insertTemperature(new TimeSeriesDatum<>(date, row.getCell(5).getNumericCellValue()));
+      observation.insertConductivity(new TimeSeriesDatum<>(date, row.getCell(6).getNumericCellValue()));
     }
 
     logger.info("Data file loaded: " + file.getAbsolutePath());
@@ -54,15 +61,6 @@ public class ExcelLoaderService {
 
   private double getObservationHeight(Sheet sheet) {
     return sheet.getRow(2).getCell(1).getNumericCellValue();
-  }
-
-  private Observation.Datum getObservationDatum(Row row) {
-    Date date = row.getCell(3).getDateCellValue();
-    double waterLevel = row.getCell(4).getNumericCellValue();
-    double temperature = row.getCell(5).getNumericCellValue();
-    double conductivity = row.getCell(6).getNumericCellValue();
-
-    return new Observation.Datum(date, waterLevel, temperature, conductivity);
   }
 
   private Tuple<Integer, Integer, Integer> getObservationLatitude(Sheet sheet) {
