@@ -32,7 +32,7 @@ public class WooController {
       mainWindow.getDesktop().add(view);
       view.setSelected(true);
     } catch (Exception e) {
-      JOptionPane.showMessageDialog(mainWindow, "Cannot open file!", "Open Data", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(mainWindow, "파일을 불러오는데 실패했습니다!", "자료 불러오기", JOptionPane.ERROR_MESSAGE);
       LOG.error(e.getMessage());
     }
   }
@@ -44,7 +44,7 @@ public class WooController {
       mainWindow.getDesktop().add(view);
       view.setSelected(true);
     } catch (PropertyVetoException e) {
-      JOptionPane.showMessageDialog(mainWindow, "Cannot draw graph!", "Draw Graph", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "그래프 그리기", JOptionPane.ERROR_MESSAGE);
       LOG.error(e.getMessage());
     }
   }

@@ -4,11 +4,14 @@ import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.model.TimeSeriesDatum;
 
 import javax.swing.table.AbstractTableModel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class RawObservationTableModel extends AbstractTableModel {
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
   private List<TimeSeriesDatum<Double>> waterLevel;
   private List<TimeSeriesDatum<Double>> temperature;
   private List<TimeSeriesDatum<Double>> conductivity;
@@ -40,7 +43,7 @@ public class RawObservationTableModel extends AbstractTableModel {
   public Object getValueAt(int rowIndex, int columnIndex) {
     switch (columnIndex) {
       case 0:
-        return waterLevel.get(rowIndex).getDate();
+        return DATE_FORMAT.format(waterLevel.get(rowIndex).getDate());
       case 1:
         return waterLevel.get(rowIndex).getDatum();
       case 2:

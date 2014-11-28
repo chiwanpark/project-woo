@@ -17,13 +17,14 @@ import java.util.List;
 @Component
 public class TimeSeriesChartView extends JInternalFrame {
   public TimeSeriesChartView(String title, TimeSeriesDataset dataset) {
-    super(title);
+    super("Graph - " + title);
 
     XYDataset jfreeDataset = createDataSet(dataset);
     ChartPanel pnChart = createChart(title, jfreeDataset);
 
     setContentPane(pnChart);
     setSize(640, 320);
+    setMaximizable(true);
     setVisible(true);
     setClosable(true);
     setResizable(true);

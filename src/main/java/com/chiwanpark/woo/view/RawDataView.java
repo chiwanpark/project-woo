@@ -3,6 +3,7 @@ package com.chiwanpark.woo.view;
 import com.chiwanpark.woo.WooController;
 import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.model.TimeSeriesDataset;
+import com.chiwanpark.woo.model.TimeSeriesDatum;
 import com.chiwanpark.woo.model.table.RawObservationTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,14 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class RawDataView extends JInternalFrame {
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
   private JTable tblData;
   private JPanel pnContents;
   private JTextField txtName;
@@ -21,6 +27,7 @@ public class RawDataView extends JInternalFrame {
   private JTextField txtLatitude;
   private JTextField txtLongitude;
   private JButton btnGraph;
+  private JTextField txtTimePeriod;
 
   private @Autowired WooController controller;
 
@@ -28,6 +35,8 @@ public class RawDataView extends JInternalFrame {
 
   public RawDataView(RawObservation rawObservation) {
     super("Raw Data -" + rawObservation.getName(), true, true, true, true);
+
+    this.rawObservation = rawObservation;
 
     txtName.setText(rawObservation.getName());
     txtType.setText(rawObservation.getType());
@@ -37,7 +46,7 @@ public class RawDataView extends JInternalFrame {
 
     tblData.setModel(new RawObservationTableModel(rawObservation));
 
-    this.rawObservation = rawObservation;
+    setTimePeriod();
 
     createBtnGraphAction();
 
@@ -56,5 +65,23 @@ public class RawDataView extends JInternalFrame {
         controller.drawGraph("Conductivity!", dataset);
       }
     });
+  }
+
+  private void setTimePeriod() {
+    List<TimeSeriesDatum<Double>> waterLevel = rawObservation.getWaterLevelList();
+    Date start = waterLevel.get(0).getDate(), end = waterLevel.get(0).getDate();
+
+    for (TimeSeriesDatum<Double> datum : waterLevel) {
+      Date date = datum.getDate();
+
+      if (start.compareTo(date) > 0) {
+        start = date;
+      }
+      if (end.compareTo(date) < 0) {
+        end = date;
+      }
+    }
+
+    txtTimePeriod.setText(DATE_FORMAT.format(start) + " ~ " + DATE_FORMAT.format(end));
   }
 }

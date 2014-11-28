@@ -40,7 +40,7 @@ public class MainWindow extends JFrame {
   public JMenuBar createMenu() {
     JMenuBar menuBar = new JMenuBar();
 
-    JMenu menuFile = new JMenu("File");
+    JMenu menuFile = new JMenu("파일");
     menuFile.add(createOpenDataItem());
     menuFile.add(createExitItem());
 
@@ -50,7 +50,7 @@ public class MainWindow extends JFrame {
   }
 
   public JMenuItem createOpenDataItem() {
-    JMenuItem item = new JMenuItem("Open Data");
+    JMenuItem item = new JMenuItem("자료 불러오기");
 
     item.addActionListener(new ActionListener() {
       @Override
@@ -61,7 +61,7 @@ public class MainWindow extends JFrame {
 
         fileChooser.addChoosableFileFilter(fileFilter);
 
-        int result = fileChooser.showDialog(desktopPane, "Open Data");
+        int result = fileChooser.showDialog(desktopPane, "자료 불러오기");
         if (result == JFileChooser.APPROVE_OPTION) {
           File openedFile = fileChooser.getSelectedFile();
           LOG.info("File Chosen: " + openedFile.getAbsolutePath());
@@ -75,7 +75,7 @@ public class MainWindow extends JFrame {
   }
 
   public JMenuItem createExitItem() {
-    JMenuItem item = new JMenuItem("Exit");
+    JMenuItem item = new JMenuItem("종료");
 
     item.addActionListener(new ActionListener() {
       @Override
