@@ -1,7 +1,9 @@
 package com.chiwanpark.woo.view;
 
+import com.chiwanpark.woo.WooController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -16,6 +18,8 @@ public class MainWindow extends JFrame {
 
   private JDesktopPane desktopPane;
 
+  private @Autowired WooController wooController;
+
   public MainWindow() throws HeadlessException {
     super("Project Woo");
 
@@ -24,9 +28,13 @@ public class MainWindow extends JFrame {
 
     setJMenuBar(createMenu());
 
-    setDefaultCloseOperation(EXIT_ON_CLOSE);
-    setSize(640, 480);
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    setSize(1024, 768);
     setVisible(true);
+  }
+
+  public JDesktopPane getDesktop() {
+    return desktopPane;
   }
 
   public JMenuBar createMenu() {
@@ -57,6 +65,8 @@ public class MainWindow extends JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
           File openedFile = fileChooser.getSelectedFile();
           logger.info("File Chosen: " + openedFile.getAbsolutePath());
+
+          wooController.loadExcelFile(openedFile);
         }
       }
     });

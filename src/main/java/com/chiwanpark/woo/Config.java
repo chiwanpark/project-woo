@@ -16,4 +16,9 @@ public class Config {
   public ExcelLoaderService excelLoaderService() {
     return new ExcelLoaderService();
   }
+
+  @Bean
+  public WooController wooController() {
+    return new WooController();
+  }
 }

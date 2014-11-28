@@ -22,4 +22,8 @@ public class Tuple<T1, T2, T3> {
   public T3 getV3() {
     return v3;
   }
+
+  public String toString(String u1, String u2, String u3) {
+    return String.valueOf(v1) + u1 + " " + String.valueOf(v2) + u2 + " " + String.valueOf(v3) + u3;
+  }
 }
