@@ -4,6 +4,7 @@ import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.model.TimeSeriesDataset;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.MainWindow;
+import com.chiwanpark.woo.view.ParameterSelectionPanel;
 import com.chiwanpark.woo.view.RawDataView;
 import com.chiwanpark.woo.view.TimeSeriesChartView;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,5 +39,11 @@ public class Config {
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   public TimeSeriesChartView timeSeriesChartView(String title, TimeSeriesDataset dataset) {
     return new TimeSeriesChartView(title, dataset);
+  }
+
+  @Bean
+  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  public ParameterSelectionPanel parameterSelectionPanel() {
+    return new ParameterSelectionPanel();
   }
 }

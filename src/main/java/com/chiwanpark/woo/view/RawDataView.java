@@ -2,7 +2,6 @@ package com.chiwanpark.woo.view;
 
 import com.chiwanpark.woo.WooController;
 import com.chiwanpark.woo.model.RawObservation;
-import com.chiwanpark.woo.model.TimeSeriesDataset;
 import com.chiwanpark.woo.model.TimeSeriesDatum;
 import com.chiwanpark.woo.model.table.RawObservationTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +58,7 @@ public class RawDataView extends JInternalFrame {
     btnGraph.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        TimeSeriesDataset dataset = new TimeSeriesDataset();
-        dataset.insertData("conductivity", rawObservation.getConductivityList());
-
-        controller.drawGraph("Conductivity!", dataset);
+        controller.drawGraphFromRawObservation(rawObservation);
       }
     });
   }
