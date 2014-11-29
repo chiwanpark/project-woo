@@ -154,7 +154,7 @@
           <component id="99fb4" class="javax.swing.JButton" binding="btnGraph">
             <constraints/>
             <properties>
-              <text value="그래프로 보기"/>
+              <text value="그래프 보기"/>
             </properties>
           </component>
         </children>
