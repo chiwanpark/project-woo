@@ -2,7 +2,6 @@ package com.chiwanpark.woo.view;
 
 import com.chiwanpark.woo.WooController;
 import com.chiwanpark.woo.model.RawObservation;
-import com.chiwanpark.woo.model.TimeSeriesDatum;
 import com.chiwanpark.woo.model.table.RawObservationTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class RawDataView extends JInternalFrame {
@@ -64,19 +62,8 @@ public class RawDataView extends JInternalFrame {
   }
 
   private void setTimePeriod() {
-    List<TimeSeriesDatum<Double>> waterLevel = rawObservation.getWaterLevelList();
-    Date start = waterLevel.get(0).getDate(), end = waterLevel.get(0).getDate();
-
-    for (TimeSeriesDatum<Double> datum : waterLevel) {
-      Date date = datum.getDate();
-
-      if (start.compareTo(date) > 0) {
-        start = date;
-      }
-      if (end.compareTo(date) < 0) {
-        end = date;
-      }
-    }
+    Date start = rawObservation.getMinimumDate();
+    Date end = rawObservation.getMaximumDate();
 
     txtTimePeriod.setText(DATE_FORMAT.format(start) + " ~ " + DATE_FORMAT.format(end));
   }

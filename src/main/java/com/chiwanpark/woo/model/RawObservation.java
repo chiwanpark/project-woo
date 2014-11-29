@@ -1,6 +1,7 @@
 package com.chiwanpark.woo.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RawObservation {
@@ -81,5 +82,27 @@ public class RawObservation {
 
   public void insertConductivity(TimeSeriesDatum<Double> conductivity) {
     conductivityList.add(conductivity);
+  }
+
+  public Date getMinimumDate() {
+    Date min = waterLevelList.get(0).getDate();
+    for (TimeSeriesDatum<Double> datum : waterLevelList) {
+      if (min.compareTo(datum.getDate()) > 0) {
+        min = datum.getDate();
+      }
+    }
+
+    return min;
+  }
+
+  public Date getMaximumDate() {
+    Date max = waterLevelList.get(0).getDate();
+    for (TimeSeriesDatum<Double> datum : waterLevelList) {
+      if (max.compareTo(datum.getDate()) < 0) {
+        max = datum.getDate();
+      }
+    }
+
+    return max;
   }
 }
