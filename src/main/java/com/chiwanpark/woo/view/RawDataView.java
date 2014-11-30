@@ -1,7 +1,8 @@
 package com.chiwanpark.woo.view;
 
+import com.chiwanpark.woo.Config;
 import com.chiwanpark.woo.WooController;
-import com.chiwanpark.woo.model.RawObservation;
+import com.chiwanpark.woo.model.Observation;
 import com.chiwanpark.woo.model.table.RawObservationTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,13 +10,10 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Component
 public class RawDataView extends JInternalFrame {
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-
   private JTable tblData;
   private JPanel pnContents;
   private JTextField txtName;
@@ -29,20 +27,20 @@ public class RawDataView extends JInternalFrame {
 
   private @Autowired WooController controller;
 
-  private RawObservation rawObservation;
+  private Observation observation;
 
-  public RawDataView(RawObservation rawObservation) {
-    super("Raw Data -" + rawObservation.getName(), true, true, true, true);
+  public RawDataView(Observation observation) {
+    super("Raw Data -" + observation.getName(), true, true, true, true);
 
-    this.rawObservation = rawObservation;
+    this.observation = observation;
 
-    txtName.setText(rawObservation.getName());
-    txtType.setText(rawObservation.getType());
-    txtHeight.setText(String.valueOf(rawObservation.getHeight()) + "m");
-    txtLatitude.setText(rawObservation.getLatitude().toString("도", "분", "초"));
-    txtLongitude.setText(rawObservation.getLongitude().toString("도", "분", "초"));
+    txtName.setText(observation.getName());
+    txtType.setText(observation.getType());
+    txtHeight.setText(String.valueOf(observation.getHeight()) + "m");
+    txtLatitude.setText(observation.getLatitude().toString(Config.POSITION_FORMAT));
+    txtLongitude.setText(observation.getLongitude().toString(Config.POSITION_FORMAT));
 
-    tblData.setModel(new RawObservationTableModel(rawObservation));
+    tblData.setModel(new RawObservationTableModel(observation));
 
     setTimePeriod();
 
@@ -58,7 +56,7 @@ public class RawDataView extends JInternalFrame {
     btnGraph.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.drawGraphFromRawObservation(rawObservation);
+        controller.drawGraphFromRawObservation(observation);
       }
     });
   }
@@ -67,15 +65,15 @@ public class RawDataView extends JInternalFrame {
     btnStatistics.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.calculateBasicStatistics(rawObservation);
+        controller.calculateBasicStatistics(observation);
       }
     });
   }
 
   private void setTimePeriod() {
-    Date start = rawObservation.getMinimumDate();
-    Date end = rawObservation.getMaximumDate();
+    Date start = observation.getWaterLevelList().getDateStart();
+    Date end = observation.getWaterLevelList().getDateEnd();
 
-    txtTimePeriod.setText(DATE_FORMAT.format(start) + " ~ " + DATE_FORMAT.format(end));
+    txtTimePeriod.setText(Config.DATE_FORMAT.format(start) + " ~ " + Config.DATE_FORMAT.format(end));
   }
 }

@@ -8,6 +8,7 @@ import javax.swing.*;
 
 public class Launcher {
   private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
+
   public static void main(String... args) throws Exception {
     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
     new AnnotationConfigApplicationContext(Config.class);

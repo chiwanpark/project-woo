@@ -1,27 +1,22 @@
 package com.chiwanpark.woo.model.table;
 
-import com.chiwanpark.woo.model.RawObservation;
+import com.chiwanpark.woo.Config;
+import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.model.TimeSeriesDatum;
 
 import javax.swing.table.AbstractTableModel;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class RawObservationTableModel extends AbstractTableModel {
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+  private TimeSeriesData waterLevel;
+  private TimeSeriesData temperature;
+  private TimeSeriesData conductivity;
 
-  private List<TimeSeriesDatum<Double>> waterLevel;
-  private List<TimeSeriesDatum<Double>> temperature;
-  private List<TimeSeriesDatum<Double>> conductivity;
-
-  private String[] columns = {"관측 날짜", "수위 (m)", "수온 (deg C)", "전기 전도도 (uS/cm)"};
-
-  public RawObservationTableModel(RawObservation observation) {
-    waterLevel = new ArrayList<>(observation.getWaterLevelList());
-    temperature = new ArrayList<>(observation.getTemperatureList());
-    conductivity = new ArrayList<>(observation.getConductivityList());
+  public RawObservationTableModel(Observation observation) {
+    waterLevel = new TimeSeriesData(observation.getWaterLevelList());
+    temperature = new TimeSeriesData(observation.getTemperatureList());
+    conductivity = new TimeSeriesData(observation.getConductivityList());
 
     TimeSeriesDatum.TimeComparator comparator = new TimeSeriesDatum.TimeComparator();
     Collections.sort(waterLevel, comparator);
@@ -36,14 +31,14 @@ public class RawObservationTableModel extends AbstractTableModel {
 
   @Override
   public int getColumnCount() {
-    return columns.length;
+    return 4;
   }
 
   @Override
   public Object getValueAt(int rowIndex, int columnIndex) {
     switch (columnIndex) {
       case 0:
-        return DATE_FORMAT.format(waterLevel.get(rowIndex).getDate());
+        return Config.DATE_FORMAT.format(waterLevel.get(rowIndex).getDate());
       case 1:
         return waterLevel.get(rowIndex).getDatum();
       case 2:
@@ -57,6 +52,17 @@ public class RawObservationTableModel extends AbstractTableModel {
 
   @Override
   public String getColumnName(int column) {
-    return columns[column];
+    switch (column) {
+      case 0:
+        return "관측 날짜";
+      case 1:
+        return waterLevel.getName();
+      case 2:
+        return temperature.getName();
+      case 3:
+        return conductivity.getName();
+      default:
+        return null;
+    }
   }
 }

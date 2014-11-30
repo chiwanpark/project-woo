@@ -1,11 +1,11 @@
 package com.chiwanpark.woo.model;
 
-public class Tuple<T1, T2, T3> {
+public class Tuple3<T1, T2, T3> {
   private T1 v1;
   private T2 v2;
   private T3 v3;
 
-  public Tuple(T1 v1, T2 v2, T3 v3) {
+  public Tuple3(T1 v1, T2 v2, T3 v3) {
     this.v1 = v1;
     this.v2 = v2;
     this.v3 = v3;
@@ -23,7 +23,7 @@ public class Tuple<T1, T2, T3> {
     return v3;
   }
 
-  public String toString(String u1, String u2, String u3) {
-    return String.valueOf(v1) + u1 + " " + String.valueOf(v2) + u2 + " " + String.valueOf(v3) + u3;
+  public String toString(String pattern) {
+    return String.format(pattern, v1, v2, v3);
   }
 }

@@ -1,6 +1,6 @@
 package com.chiwanpark.woo.view;
 
-import com.chiwanpark.woo.model.TimeSeriesDataset;
+import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.model.TimeSeriesDatum;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 public class TimeSeriesChartView extends JInternalFrame {
-  public TimeSeriesChartView(String title, TimeSeriesDataset dataset) {
+  public TimeSeriesChartView(String title, List<TimeSeriesData> dataset) {
     super("Graph - " + title);
 
     XYDataset jfreeDataset = createDataSet(dataset);
@@ -30,16 +30,12 @@ public class TimeSeriesChartView extends JInternalFrame {
     setResizable(true);
   }
 
-  private XYDataset createDataSet(TimeSeriesDataset dataset) {
+  private XYDataset createDataSet(List<TimeSeriesData> dataset) {
     TimeSeriesCollection collection = new TimeSeriesCollection();
 
-    for (int i = 0; i < dataset.size(); ++i) {
-      String seriesName = dataset.getSeriesName(i);
-      List<TimeSeriesDatum<Double>> data = dataset.getData(i);
-
-      TimeSeries series = new TimeSeries(seriesName);
-
-      for (TimeSeriesDatum<Double> datum : data) {
+    for (TimeSeriesData data : dataset) {
+      TimeSeries series = new TimeSeries(data.getName());
+      for (TimeSeriesDatum datum : data) {
         series.add(new Second(datum.getDate()), datum.getDatum());
       }
 

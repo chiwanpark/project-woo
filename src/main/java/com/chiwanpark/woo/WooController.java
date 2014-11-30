@@ -1,8 +1,7 @@
 package com.chiwanpark.woo;
 
-import com.chiwanpark.woo.model.RawObservation;
-import com.chiwanpark.woo.model.TimeSeriesDataset;
-import com.chiwanpark.woo.model.TimeSeriesDatum;
+import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.*;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class WooController {
 
   public void loadExcelFile(File file) {
     try {
-      RawObservation observation = excelLoaderService.loadExcelFile(file);
+      Observation observation = excelLoaderService.loadExcelFile(file);
       RawDataView view = context.getBean(RawDataView.class, observation);
 
       mainWindow.getDesktop().add(view);
@@ -39,9 +38,13 @@ public class WooController {
     }
   }
 
-  public void drawGraphFromRawObservation(RawObservation observation) {
-    TimeSeriesDataset dataset = getParameterizedDataSet(observation);
-    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, "Graph", dataset);
+  public void drawGraphFromRawObservation(Observation observation) {
+    List<TimeSeriesData> dataset = getParameterizedDataSet(observation);
+    if (dataset == null) {
+      return;
+    }
+
+    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, dataset.get(0).getName(), dataset);
 
     try {
       mainWindow.getDesktop().add(view);
@@ -52,8 +55,8 @@ public class WooController {
     }
   }
 
-  private TimeSeriesDataset getParameterizedDataSet(RawObservation observation) {
-    ParameterSelectionPanel selectionPanel = context.getBean(ParameterSelectionPanel.class, observation.getMinimumDate(), observation.getMaximumDate());
+  private List<TimeSeriesData> getParameterizedDataSet(Observation observation) {
+    ParameterSelectionPanel selectionPanel = context.getBean(ParameterSelectionPanel.class, observation.getDateStart(), observation.getDateEnd());
     int result = JOptionPane.showConfirmDialog(mainWindow, selectionPanel, "Parameter 선택", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
     if (result != 0) {
       LOG.info("User cancels selection of parameter.");
@@ -68,14 +71,14 @@ public class WooController {
       return null;
     }
 
-    TimeSeriesDataset dataset = new TimeSeriesDataset();
+    List<TimeSeriesData> dataset = new ArrayList<>();
 
     if (selectionPanel.getConductivity()) {
-      dataset.insertData("전기 전도도", filterByDate(observation.getConductivityList(), rangeStart, rangeEnd));
+      dataset.add(observation.getConductivityList().filterByDate(rangeStart, rangeEnd));
     } else if (selectionPanel.getTemparature()) {
-      dataset.insertData("온도", filterByDate(observation.getTemperatureList(), rangeStart, rangeEnd));
+      dataset.add(observation.getTemperatureList().filterByDate(rangeStart, rangeEnd));
     } else if (selectionPanel.getWaterLevel()) {
-      dataset.insertData("수위", filterByDate(observation.getWaterLevelList(), rangeStart, rangeEnd));
+      dataset.add(observation.getWaterLevelList().filterByDate(rangeStart, rangeEnd));
     } else {
       JOptionPane.showMessageDialog(mainWindow, "Parameter를 선택하지 않았습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
       return null;
@@ -84,45 +87,15 @@ public class WooController {
     return dataset;
   }
 
-  private List<TimeSeriesDatum<Double>> filterByDate(List<TimeSeriesDatum<Double>> data, Date rangeStart, Date rangeEnd) {
-    List<TimeSeriesDatum<Double>> result = new ArrayList<>();
-
-    for (TimeSeriesDatum<Double> datum : data) {
-      if (rangeStart.compareTo(datum.getDate()) <= 0 && datum.getDate().compareTo(rangeEnd) <= 0) {
-        result.add(datum);
-      }
+  public void calculateBasicStatistics(Observation observation) {
+    List<TimeSeriesData> dataset = getParameterizedDataSet(observation);
+    if (dataset == null) {
+      return;
     }
 
-    return result;
-  }
+    TimeSeriesData data = dataset.get(0);
 
-  public void calculateBasicStatistics(RawObservation observation) {
-    TimeSeriesDataset dataset = getParameterizedDataSet(observation);
-
-    List<TimeSeriesDatum<Double>> data = dataset.getData(0);
-    double sumOfData = 0;
-    double sumOfDataSquared = 0;
-    double maximum = Double.MIN_VALUE;
-    double minimum = Double.MAX_VALUE;
-
-    for (TimeSeriesDatum<Double> datum : data) {
-      double value = datum.getDatum();
-
-      sumOfData += value;
-      sumOfDataSquared += value * value;
-
-      if (maximum < value) {
-        maximum = value;
-      }
-      if (minimum > value) {
-        minimum = value;
-      }
-    }
-
-    double average = sumOfData / data.size();
-    double stdDeviation = Math.sqrt(sumOfDataSquared / data.size() - average * average);
-
-    BasicStatisticsView view = context.getBean(BasicStatisticsView.class, observation, dataset.getSeriesName(0), maximum, minimum, average, stdDeviation);
+    BasicStatisticsView view = context.getBean(BasicStatisticsView.class, observation, data);
     try {
       mainWindow.getDesktop().add(view);
       view.setSelected(true);

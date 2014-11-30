@@ -1,8 +1,9 @@
 package com.chiwanpark.woo.service;
 
-import com.chiwanpark.woo.model.RawObservation;
+import com.chiwanpark.woo.Config;
+import com.chiwanpark.woo.model.Observation;
 import com.chiwanpark.woo.model.TimeSeriesDatum;
-import com.chiwanpark.woo.model.Tuple;
+import com.chiwanpark.woo.model.Tuple3;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,18 +17,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class ExcelLoaderService {
   private static final Logger LOG = LoggerFactory.getLogger(ExcelLoaderService.class);
-  private static final Pattern POSITION_PATTERN = Pattern.compile("([0-9]+)도 ([0-9]+)분 ([0-9]+)초");
 
-  public RawObservation loadExcelFile(File file) throws IOException, InvalidFormatException {
+  public Observation loadExcelFile(File file) throws IOException, InvalidFormatException {
     Workbook workbook = WorkbookFactory.create(file);
     Sheet sheet = workbook.getSheetAt(0);
 
-    RawObservation observation = new RawObservation();
+    Observation observation = new Observation();
 
     observation.setName(getObservationName(sheet));
     observation.setType(getObservationType(sheet));
@@ -40,9 +39,9 @@ public class ExcelLoaderService {
 
       Date date = row.getCell(3).getDateCellValue();
 
-      observation.insertWaterLevel(new TimeSeriesDatum<>(date, row.getCell(4).getNumericCellValue()));
-      observation.insertTemperature(new TimeSeriesDatum<>(date, row.getCell(5).getNumericCellValue()));
-      observation.insertConductivity(new TimeSeriesDatum<>(date, row.getCell(6).getNumericCellValue()));
+      observation.insertWaterLevel(new TimeSeriesDatum(date, row.getCell(4).getNumericCellValue()));
+      observation.insertTemperature(new TimeSeriesDatum(date, row.getCell(5).getNumericCellValue()));
+      observation.insertConductivity(new TimeSeriesDatum(date, row.getCell(6).getNumericCellValue()));
     }
 
     LOG.info("Data file loaded: " + file.getAbsolutePath());
@@ -63,18 +62,18 @@ public class ExcelLoaderService {
     return sheet.getRow(2).getCell(1).getNumericCellValue();
   }
 
-  private Tuple<Integer, Integer, Integer> getObservationLatitude(Sheet sheet) {
+  private Tuple3<Integer, Integer, Integer> getObservationLatitude(Sheet sheet) {
     return parsePosition(sheet.getRow(3).getCell(1).getStringCellValue());
   }
 
-  private Tuple<Integer, Integer, Integer> getObservationLongitude(Sheet sheet) {
+  private Tuple3<Integer, Integer, Integer> getObservationLongitude(Sheet sheet) {
     return parsePosition(sheet.getRow(4).getCell(1).getStringCellValue());
   }
 
-  private Tuple<Integer, Integer, Integer> parsePosition(String s) {
-    Matcher matcher = POSITION_PATTERN.matcher(s);
+  private Tuple3<Integer, Integer, Integer> parsePosition(String s) {
+    Matcher matcher = Config.POSITION_PATTERN.matcher(s);
     if (matcher.find()) {
-      return new Tuple<>(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)));
+      return new Tuple3<>(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(3)));
     }
 
     LOG.warn("Cannot parse position data!");

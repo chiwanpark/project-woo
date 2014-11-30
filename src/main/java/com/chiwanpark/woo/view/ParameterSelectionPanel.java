@@ -1,18 +1,17 @@
 package com.chiwanpark.woo.view;
 
+import com.chiwanpark.woo.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
 public class ParameterSelectionPanel extends JPanel {
   private static final Logger LOG = LoggerFactory.getLogger(ParameterSelectionPanel.class);
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   private JPanel pnContents;
   private JSpinner spinStartDate;
@@ -47,7 +46,7 @@ public class ParameterSelectionPanel extends JPanel {
 
   public Date getRangeStart() {
     try {
-      return DATE_FORMAT.parse((String) spinStartDate.getModel().getValue());
+      return Config.DATE_FORMAT.parse((String) spinStartDate.getModel().getValue());
     } catch (ParseException e) {
       LOG.warn("Parsing start of date range is failed.", e);
       return null;
@@ -56,7 +55,7 @@ public class ParameterSelectionPanel extends JPanel {
 
   public Date getRangeEnd() {
     try {
-      return DATE_FORMAT.parse((String) spinEndDate.getModel().getValue());
+      return Config.DATE_FORMAT.parse((String) spinEndDate.getModel().getValue());
     } catch (ParseException e) {
       LOG.warn("Parsing start of date range is failed.", e);
       return null;
@@ -81,7 +80,7 @@ public class ParameterSelectionPanel extends JPanel {
     Calendar calendar = new GregorianCalendar();
 
     do {
-      result.add(DATE_FORMAT.format(start));
+      result.add(Config.DATE_FORMAT.format(start));
       calendar.setTime(start);
       calendar.add(Calendar.HOUR_OF_DAY, 1);
       start = calendar.getTime();

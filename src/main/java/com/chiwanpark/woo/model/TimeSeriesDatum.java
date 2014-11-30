@@ -3,11 +3,11 @@ package com.chiwanpark.woo.model;
 import java.util.Comparator;
 import java.util.Date;
 
-public class TimeSeriesDatum<T> {
+public class TimeSeriesDatum {
   private Date date;
-  private T datum;
+  private double datum;
 
-  public TimeSeriesDatum(Date date, T datum) {
+  public TimeSeriesDatum(Date date, double datum) {
     this.date = date;
     this.datum = datum;
   }
@@ -16,7 +16,7 @@ public class TimeSeriesDatum<T> {
     return date;
   }
 
-  public T getDatum() {
+  public double getDatum() {
     return datum;
   }
 
