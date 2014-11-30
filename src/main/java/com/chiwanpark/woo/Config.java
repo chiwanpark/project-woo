@@ -3,10 +3,7 @@ package com.chiwanpark.woo;
 import com.chiwanpark.woo.model.RawObservation;
 import com.chiwanpark.woo.model.TimeSeriesDataset;
 import com.chiwanpark.woo.service.ExcelLoaderService;
-import com.chiwanpark.woo.view.MainWindow;
-import com.chiwanpark.woo.view.ParameterSelectionPanel;
-import com.chiwanpark.woo.view.RawDataView;
-import com.chiwanpark.woo.view.TimeSeriesChartView;
+import com.chiwanpark.woo.view.*;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,5 +44,11 @@ public class Config {
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   public ParameterSelectionPanel parameterSelectionPanel(Date rangeStart, Date rangeEnd) {
     return new ParameterSelectionPanel(rangeStart, rangeEnd);
+  }
+
+  @Bean
+  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  public BasicStatisticsView basicStatisticsView(RawObservation rawObservation, String parameter, double maximum, double minimum, double average, double stdDeviation) {
+    return new BasicStatisticsView(rawObservation, parameter, maximum, minimum, average, stdDeviation);
   }
 }

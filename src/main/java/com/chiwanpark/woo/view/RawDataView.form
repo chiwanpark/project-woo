@@ -157,6 +157,12 @@
               <text value="그래프 보기"/>
             </properties>
           </component>
+          <component id="bb552" class="javax.swing.JButton" binding="btnStatistics">
+            <constraints/>
+            <properties>
+              <text value="기본 통계량 계산"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <component id="503d5" class="javax.swing.JLabel">

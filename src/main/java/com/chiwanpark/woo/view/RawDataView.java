@@ -25,6 +25,7 @@ public class RawDataView extends JInternalFrame {
   private JTextField txtLongitude;
   private JButton btnGraph;
   private JTextField txtTimePeriod;
+  private JButton btnStatistics;
 
   private @Autowired WooController controller;
 
@@ -46,6 +47,7 @@ public class RawDataView extends JInternalFrame {
     setTimePeriod();
 
     createBtnGraphAction();
+    createBtnStatisticsAction();
 
     setContentPane(pnContents);
     setSize(640, 480);
@@ -57,6 +59,15 @@ public class RawDataView extends JInternalFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.drawGraphFromRawObservation(rawObservation);
+      }
+    });
+  }
+
+  private void createBtnStatisticsAction() {
+    btnStatistics.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.calculateBasicStatistics(rawObservation);
       }
     });
   }
