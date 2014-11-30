@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Date;
+
 @Configuration
 public class Config {
   @Bean
@@ -43,7 +45,7 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  public ParameterSelectionPanel parameterSelectionPanel() {
-    return new ParameterSelectionPanel();
+  public ParameterSelectionPanel parameterSelectionPanel(Date rangeStart, Date rangeEnd) {
+    return new ParameterSelectionPanel(rangeStart, rangeEnd);
   }
 }
