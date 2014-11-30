@@ -14,12 +14,12 @@ public class ParameterSelectionPanel extends JPanel {
   private static final Logger LOG = LoggerFactory.getLogger(ParameterSelectionPanel.class);
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-  private JCheckBox chkWaterLevel;
-  private JCheckBox chkTemparature;
-  private JCheckBox chkConductivity;
   private JPanel pnContents;
   private JSpinner spinStartDate;
   private JSpinner spinEndDate;
+  private JRadioButton radioWaterLavel;
+  private JRadioButton radioTemperature;
+  private JRadioButton radioConductivity;
 
   private Date rangeStart;
   private Date rangeEnd;
@@ -34,15 +34,15 @@ public class ParameterSelectionPanel extends JPanel {
   }
 
   public boolean getWaterLevel() {
-    return chkWaterLevel.isSelected();
+    return radioWaterLavel.isSelected();
   }
 
   public boolean getTemparature() {
-    return chkTemparature.isSelected();
+    return radioTemperature.isSelected();
   }
 
   public boolean getConductivity() {
-    return chkConductivity.isSelected();
+    return radioConductivity.isSelected();
   }
 
   public Date getRangeStart() {

@@ -54,6 +54,10 @@ public class WooController {
     Date rangeStart = selectionPanel.getRangeStart();
     Date rangeEnd = selectionPanel.getRangeEnd();
     LOG.info("Selected date range (" + rangeStart + ", " + rangeEnd + ")");
+    if (rangeStart == null || rangeEnd == null || rangeStart.compareTo(rangeEnd) > 0) {
+      JOptionPane.showMessageDialog(mainWindow, "날짜 범위가 잘못 되었습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
 
     List<String> series = new ArrayList<>();
 
@@ -61,14 +65,15 @@ public class WooController {
     if (selectionPanel.getConductivity()) {
       series.add("전기 전도도");
       dataset.insertData("전기 전도도", filterByDate(observation.getConductivityList(), rangeStart, rangeEnd));
-    }
-    if (selectionPanel.getTemparature()) {
+    } else if (selectionPanel.getTemparature()) {
       series.add("온도");
       dataset.insertData("온도", filterByDate(observation.getTemperatureList(), rangeStart, rangeEnd));
-    }
-    if (selectionPanel.getWaterLevel()) {
+    } else if (selectionPanel.getWaterLevel()) {
       series.add("수위");
       dataset.insertData("수위", filterByDate(observation.getWaterLevelList(), rangeStart, rangeEnd));
+    } else {
+      JOptionPane.showMessageDialog(mainWindow, "Parameter를 선택하지 않았습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+      return;
     }
 
     TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, StringUtils.collectionToDelimitedString(series, ", "), dataset);

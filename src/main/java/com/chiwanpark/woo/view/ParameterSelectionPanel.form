@@ -24,7 +24,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="86953" class="javax.swing.JCheckBox" binding="chkWaterLevel">
+          <component id="288fa" class="javax.swing.JRadioButton" binding="radioWaterLavel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -32,15 +32,15 @@
               <text value="수위"/>
             </properties>
           </component>
-          <component id="7e6df" class="javax.swing.JCheckBox" binding="chkTemparature">
+          <component id="5deae" class="javax.swing.JRadioButton" binding="radioTemperature">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="수온"/>
+              <text value="온도"/>
             </properties>
           </component>
-          <component id="18ac0" class="javax.swing.JCheckBox" binding="chkConductivity">
+          <component id="685aa" class="javax.swing.JRadioButton" binding="radioConductivity">
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -92,4 +92,11 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="radioParameter">
+      <member id="288fa"/>
+      <member id="5deae"/>
+      <member id="685aa"/>
+    </group>
+  </buttonGroups>
 </form>
