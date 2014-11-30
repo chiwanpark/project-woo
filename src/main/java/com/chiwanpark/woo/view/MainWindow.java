@@ -23,7 +23,14 @@ public class MainWindow extends JFrame {
   public MainWindow() throws HeadlessException {
     super("Project Woo");
 
-    desktopPane = new JDesktopPane();
+    desktopPane = new JDesktopPane() {
+      @Override
+      protected void paintComponent(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
+      }
+    };
+
     add(desktopPane);
 
     setJMenuBar(createMenu());
