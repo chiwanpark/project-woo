@@ -10,7 +10,7 @@ public class Launcher {
   private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 
   public static void main(String... args) throws Exception {
-    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     new AnnotationConfigApplicationContext(Config.class);
 
     LOG.info("Launcher finished");

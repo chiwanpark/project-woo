@@ -9,6 +9,8 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Component
 public class TimeSeriesChartView extends JInternalFrame {
+  private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesChartView.class);
+
   public TimeSeriesChartView(String title, List<TimeSeriesData> dataset) {
     super("Graph - " + title);
 
@@ -49,6 +53,8 @@ public class TimeSeriesChartView extends JInternalFrame {
     JFreeChart chart = ChartFactory.createTimeSeriesChart(title, "Date", "Value", dataset);
     ChartPanel pnChart = new ChartPanel(chart, true);
     pnChart.setPopupMenu(null);
+
+    LOG.info("Chart Font: " + chart.getTitle().getFont().getFontName());
 
     return pnChart;
   }

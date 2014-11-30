@@ -34,7 +34,7 @@ public class WooController {
       view.setSelected(true);
     } catch (Exception e) {
       JOptionPane.showMessageDialog(mainWindow, "파일을 불러오는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error(e.getMessage());
+      LOG.error("Loading excel file failed.", e);
     }
   }
 
@@ -51,7 +51,7 @@ public class WooController {
       view.setSelected(true);
     } catch (PropertyVetoException e) {
       JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error(e.getMessage());
+      LOG.error("Drawing graph failed.", e);
     }
   }
 
@@ -101,7 +101,7 @@ public class WooController {
       view.setSelected(true);
     } catch (PropertyVetoException e) {
       JOptionPane.showMessageDialog(mainWindow, "기본 통계량을 계산하는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error(e.getMessage());
+      LOG.error("Calculate basic statistics failed.", e);
     }
   }
 }
