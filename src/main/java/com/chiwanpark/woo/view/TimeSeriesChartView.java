@@ -1,11 +1,15 @@
 package com.chiwanpark.woo.view;
 
 import com.chiwanpark.woo.model.TimeSeriesData;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.DefaultDrawingSupplier;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYDotRenderer;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -70,14 +74,44 @@ public class TimeSeriesChartView extends JInternalFrame {
   }
 
   private ChartPanel createChart(String title, XYDataset dataset) {
-    JFreeChart chart = ChartFactory.createTimeSeriesChart(title, "Date", "Value", dataset);
+    // create domain axis
+    DateAxis dateAxis = new DateAxis("Date");
+    dateAxis.setAutoRange(true);
+
+    // create value axis
+    NumberAxis valueAxis = new NumberAxis("Value");
+    valueAxis.setAutoRangeIncludesZero(false);
+
+    // create item renderer
+    XYDotRenderer renderer = new XYDotRenderer();
+    renderer.setDotWidth(3);
+    renderer.setDotHeight(3);
+
+    // create plot
+    XYPlot plot = new XYPlot(dataset, dateAxis, valueAxis, renderer);
+
+    plot.setOrientation(PlotOrientation.VERTICAL);
+    plot.setDrawingSupplier(
+        new DefaultDrawingSupplier(
+            new Paint[]{Color.BLACK, Color.BLUE},
+            new Paint[]{Color.BLACK, Color.BLUE},
+            DefaultDrawingSupplier.DEFAULT_OUTLINE_PAINT_SEQUENCE,
+            DefaultDrawingSupplier.DEFAULT_STROKE_SEQUENCE,
+            DefaultDrawingSupplier.DEFAULT_OUTLINE_STROKE_SEQUENCE,
+            DefaultDrawingSupplier.DEFAULT_SHAPE_SEQUENCE
+        )
+    );
+    plot.setBackgroundPaint(Color.WHITE);
+
+    // create chart and chart panel
+    JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, true);
+    chart.setBackgroundPaint(Color.WHITE);
+
     ChartPanel pnChart = new ChartPanel(chart, true);
     pnChart.setPopupMenu(null);
 
-    LOG.info("Default chart font: " + chart.getTitle().getFont().getFontName());
-
+    // change font
     setChartFont(chart);
-
     LOG.info("Changed chart font: " + chart.getTitle().getFont().getFontName());
 
     return pnChart;
