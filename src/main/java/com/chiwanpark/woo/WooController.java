@@ -101,4 +101,26 @@ public class WooController {
       LOG.error("Calculate basic statistics failed.", e);
     }
   }
+
+  public void doAnalysis(Observation observation) {
+    List<TimeSeriesData> dataset = getParameterizedDataSet(observation);
+    if (dataset == null) {
+      return;
+    }
+
+    TimeSeriesData data = dataset.get(0);
+    List<TimeSeriesData> newDataset = new ArrayList<>();
+
+    newDataset.add(data.customAnalysis());
+
+    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, newDataset.get(0).getName(), newDataset);
+
+    try {
+      mainWindow.getDesktop().add(view);
+      view.setSelected(true);
+    } catch (PropertyVetoException e) {
+      JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+      LOG.error("Drawing graph failed.", e);
+    }
+  }
 }

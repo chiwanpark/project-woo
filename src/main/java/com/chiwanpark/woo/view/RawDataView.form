@@ -163,6 +163,12 @@
               <text value="기본 통계량 계산"/>
             </properties>
           </component>
+          <component id="9edbd" class="javax.swing.JButton" binding="btnAnalysis">
+            <constraints/>
+            <properties>
+              <text value="Analysis"/>
+            </properties>
+          </component>
         </children>
       </toolbar>
       <component id="503d5" class="javax.swing.JLabel">

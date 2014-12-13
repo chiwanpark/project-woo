@@ -105,4 +105,10 @@ public class TimeSeriesData extends HashMap<Date, Double> {
 
     return result;
   }
+
+  public TimeSeriesData customAnalysis() {
+    TimeSeriesData data = new TimeSeriesData("Custom Analysis");
+
+    return data;
+  }
 }
