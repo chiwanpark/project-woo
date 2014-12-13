@@ -16,39 +16,13 @@
           <text value="분석을 위한 날짜와 Parameter를 선택해주세요."/>
         </properties>
       </component>
-      <grid id="390ff" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="390ff" binding="pnParameterSelection" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
-        <children>
-          <component id="288fa" class="javax.swing.JRadioButton" binding="radioWaterLavel">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="수위"/>
-            </properties>
-          </component>
-          <component id="5deae" class="javax.swing.JRadioButton" binding="radioTemperature">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="온도"/>
-            </properties>
-          </component>
-          <component id="685aa" class="javax.swing.JRadioButton" binding="radioConductivity">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="전기 전도도"/>
-            </properties>
-          </component>
-        </children>
+        <children/>
       </grid>
       <grid id="b9fdd" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>

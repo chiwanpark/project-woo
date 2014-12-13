@@ -1,6 +1,8 @@
 package com.chiwanpark.woo.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Observation {
   private String name;
@@ -8,14 +10,16 @@ public class Observation {
   private double height;
   private Tuple3<Integer, Integer, Integer> longitude;
   private Tuple3<Integer, Integer, Integer> latitude;
-  private TimeSeriesData waterLevelList;
-  private TimeSeriesData temperatureList;
-  private TimeSeriesData conductivityList;
+
+  private Date dateStart;
+  private Date dateEnd;
+
+  private List<TimeSeriesData> data;
 
   public Observation() {
-    waterLevelList = new TimeSeriesData("수위 (m)");
-    temperatureList = new TimeSeriesData("온도 (deg C)");
-    conductivityList = new TimeSeriesData("전기 전도도 (uS/cm)");
+    data = new ArrayList<>();
+    dateStart = null;
+    dateEnd = null;
   }
 
   public String getName() {
@@ -58,35 +62,26 @@ public class Observation {
     this.latitude = latitude;
   }
 
-  public TimeSeriesData getWaterLevelList() {
-    return waterLevelList;
+  public void insertData(TimeSeriesData data) {
+    this.data.add(data);
+
+    if (dateStart == null || dateStart.after(data.getDateStart())) {
+      dateStart = data.getDateStart();
+    }
+    if (dateEnd == null || dateEnd.before(data.getDateEnd())) {
+      dateEnd = data.getDateEnd();
+    }
   }
 
-  public void insertWaterLevel(TimeSeriesDatum waterLevel) {
-    waterLevelList.add(waterLevel);
-  }
-
-  public TimeSeriesData getTemperatureList() {
-    return temperatureList;
-  }
-
-  public void insertTemperature(TimeSeriesDatum temperature) {
-    temperatureList.add(temperature);
-  }
-
-  public TimeSeriesData getConductivityList() {
-    return conductivityList;
-  }
-
-  public void insertConductivity(TimeSeriesDatum conductivity) {
-    conductivityList.add(conductivity);
+  public List<TimeSeriesData> getData() {
+    return data;
   }
 
   public Date getDateStart() {
-    return waterLevelList.getDateStart();
+    return dateStart;
   }
 
   public Date getDateEnd() {
-    return waterLevelList.getDateEnd();
+    return dateEnd;
   }
 }

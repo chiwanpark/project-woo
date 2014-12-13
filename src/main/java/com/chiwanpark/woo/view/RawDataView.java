@@ -71,8 +71,8 @@ public class RawDataView extends JInternalFrame {
   }
 
   private void setTimePeriod() {
-    Date start = observation.getWaterLevelList().getDateStart();
-    Date end = observation.getWaterLevelList().getDateEnd();
+    Date start = observation.getDateStart();
+    Date end = observation.getDateEnd();
 
     txtTimePeriod.setText(Config.DATE_FORMAT.format(start) + " ~ " + Config.DATE_FORMAT.format(end));
   }

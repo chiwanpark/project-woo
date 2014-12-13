@@ -1,7 +1,6 @@
 package com.chiwanpark.woo.view;
 
 import com.chiwanpark.woo.model.TimeSeriesData;
-import com.chiwanpark.woo.model.TimeSeriesDatum;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -59,8 +59,8 @@ public class TimeSeriesChartView extends JInternalFrame {
 
     for (TimeSeriesData data : dataset) {
       TimeSeries series = new TimeSeries(data.getName());
-      for (TimeSeriesDatum datum : data) {
-        series.add(new Second(datum.getDate()), datum.getDatum());
+      for (Date date : data.keySet()) {
+        series.add(new Second(date), data.get(date));
       }
 
       collection.addSeries(series);

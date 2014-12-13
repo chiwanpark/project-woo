@@ -2,7 +2,7 @@ package com.chiwanpark.woo.service;
 
 import com.chiwanpark.woo.Config;
 import com.chiwanpark.woo.model.Observation;
-import com.chiwanpark.woo.model.TimeSeriesDatum;
+import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.model.Tuple3;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.regex.Matcher;
 
 @Service
@@ -34,14 +33,17 @@ public class ExcelLoaderService {
     observation.setLatitude(getObservationLatitude(sheet));
     observation.setLongitude(getObservationLongitude(sheet));
 
-    for (int i = 7, lastRow = sheet.getLastRowNum(); i <= lastRow; ++i) {
-      Row row = sheet.getRow(i);
+    Row headerRow = sheet.getRow(6);
+    for (int c = 4; c <= 7 && c < headerRow.getLastCellNum() && headerRow.getCell(c) != null; ++c) {
+      TimeSeriesData data = new TimeSeriesData(headerRow.getCell(c).getStringCellValue());
+      for (int r = 7, lastRow = sheet.getLastRowNum(); r <= lastRow; ++r) {
+        Row row = sheet.getRow(r);
+        if (c < row.getLastCellNum() && row.getCell(c) != null) {
+          data.put(row.getCell(3).getDateCellValue(), row.getCell(c).getNumericCellValue());
+        }
+      }
 
-      Date date = row.getCell(3).getDateCellValue();
-
-      observation.insertWaterLevel(new TimeSeriesDatum(date, row.getCell(4).getNumericCellValue()));
-      observation.insertTemperature(new TimeSeriesDatum(date, row.getCell(5).getNumericCellValue()));
-      observation.insertConductivity(new TimeSeriesDatum(date, row.getCell(6).getNumericCellValue()));
+      observation.insertData(data);
     }
 
     LOG.info("Data file loaded: " + file.getAbsolutePath());

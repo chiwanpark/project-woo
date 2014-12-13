@@ -56,7 +56,7 @@ public class WooController {
   }
 
   private List<TimeSeriesData> getParameterizedDataSet(Observation observation) {
-    ParameterSelectionPanel selectionPanel = context.getBean(ParameterSelectionPanel.class, observation.getDateStart(), observation.getDateEnd());
+    ParameterSelectionPanel selectionPanel = context.getBean(ParameterSelectionPanel.class, observation);
     int result = JOptionPane.showConfirmDialog(mainWindow, selectionPanel, "Parameter 선택", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
     if (result != 0) {
       LOG.info("User cancels selection of parameter.");
@@ -73,12 +73,9 @@ public class WooController {
 
     List<TimeSeriesData> dataset = new ArrayList<>();
 
-    if (selectionPanel.getConductivity()) {
-      dataset.add(observation.getConductivityList().filterByDate(rangeStart, rangeEnd));
-    } else if (selectionPanel.getTemparature()) {
-      dataset.add(observation.getTemperatureList().filterByDate(rangeStart, rangeEnd));
-    } else if (selectionPanel.getWaterLevel()) {
-      dataset.add(observation.getWaterLevelList().filterByDate(rangeStart, rangeEnd));
+    int selected = selectionPanel.getSelected();
+    if (selected != -1) {
+      dataset.add(observation.getData().get(selected).filterByDate(rangeStart, rangeEnd));
     } else {
       JOptionPane.showMessageDialog(mainWindow, "Parameter를 선택하지 않았습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
       return null;

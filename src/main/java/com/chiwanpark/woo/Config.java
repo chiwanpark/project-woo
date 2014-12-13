@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,8 +49,8 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  public ParameterSelectionPanel parameterSelectionPanel(Date rangeStart, Date rangeEnd) {
-    return new ParameterSelectionPanel(rangeStart, rangeEnd);
+  public ParameterSelectionPanel parameterSelectionPanel(Observation observation) {
+    return new ParameterSelectionPanel(observation);
   }
 
   @Bean

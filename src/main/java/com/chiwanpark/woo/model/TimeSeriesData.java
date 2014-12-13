@@ -1,9 +1,8 @@
 package com.chiwanpark.woo.model;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
-public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
+public class TimeSeriesData extends HashMap<Date, Double> {
   private String name;
 
   public TimeSeriesData(String name) {
@@ -24,10 +23,10 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
       return null;
     }
 
-    Date start = get(0).getDate();
-    for (TimeSeriesDatum datum : this) {
-      if (start.after(datum.getDate())) {
-        start = datum.getDate();
+    Date start = null;
+    for (Date date : this.keySet()) {
+      if (start == null || start.after(date)) {
+        start = date;
       }
     }
 
@@ -39,10 +38,10 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
       return null;
     }
 
-    Date end = get(0).getDate();
-    for (TimeSeriesDatum datum : this) {
-      if (end.before(datum.getDate())) {
-        end = datum.getDate();
+    Date end = null;
+    for (Date date : this.keySet()) {
+      if (end == null || end.before(date)) {
+        end = date;
       }
     }
 
@@ -52,9 +51,9 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
   public double getMaximum() {
     double maximum = Double.MIN_VALUE;
 
-    for (TimeSeriesDatum datum : this) {
-      if (maximum < datum.getDatum()) {
-        maximum = datum.getDatum();
+    for (Double datum : this.values()) {
+      if (maximum < datum) {
+        maximum = datum;
       }
     }
 
@@ -64,9 +63,9 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
   public double getMinimum() {
     double minimum = Double.MAX_VALUE;
 
-    for (TimeSeriesDatum datum : this) {
-      if (minimum > datum.getDatum()) {
-        minimum = datum.getDatum();
+    for (Double datum : this.values()) {
+      if (minimum > datum) {
+        minimum = datum;
       }
     }
 
@@ -76,8 +75,8 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
   public double getAverage() {
     double sum = 0;
 
-    for (TimeSeriesDatum datum : this) {
-      sum += datum.getDatum();
+    for (Double datum : this.values()) {
+      sum += datum;
     }
 
     return sum / size();
@@ -86,8 +85,8 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
   public double getStdDeviation() {
     double sumOfSquared = 0;
 
-    for (TimeSeriesDatum datum : this) {
-      double value = datum.getDatum();
+    for (Double datum : this.values()) {
+      double value = datum;
       sumOfSquared += value * value;
     }
 
@@ -98,9 +97,9 @@ public class TimeSeriesData extends ArrayList<TimeSeriesDatum> {
   public TimeSeriesData filterByDate(Date start, Date end) {
     TimeSeriesData result = new TimeSeriesData(name);
 
-    for (TimeSeriesDatum datum : this) {
-      if (start.compareTo(datum.getDate()) <= 0 && datum.getDate().compareTo(end) <= 0) {
-        result.add(datum);
+    for (Date date : this.keySet()) {
+      if (start.compareTo(date) <= 0 && date.compareTo(end) <= 0) {
+        result.put(date, get(date));
       }
     }
 
