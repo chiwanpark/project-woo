@@ -14,7 +14,9 @@
             <preferred-size width="-1" height="20"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <floatable value="false"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="2b3af" class="javax.swing.JButton" binding="btnSaveGraph">
