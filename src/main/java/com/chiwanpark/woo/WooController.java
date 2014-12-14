@@ -49,7 +49,7 @@ public class WooController {
     }, new FailureCallback() {
       @Override
       public void onFailure(Throwable e) {
-        JOptionPane.showMessageDialog(mainWindow, "파일을 불러오는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(mainWindow, "Cannot open selected file!", "Error!", JOptionPane.ERROR_MESSAGE);
         LOG.error("Loading excel file failed.");
       }
     });
@@ -83,7 +83,7 @@ public class WooController {
     }, new FailureCallback() {
       @Override
       public void onFailure(Throwable e) {
-        JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(mainWindow, "Error occurred while drawing graph!", "Error!", JOptionPane.ERROR_MESSAGE);
         LOG.error("Drawing graph failed.", e);
       }
     });
@@ -91,7 +91,7 @@ public class WooController {
 
   private Tuple3<Integer, Date, Date> getBasicAnalysisParameter(Observation observation) {
     ParameterSelectionPanel selectionPanel = context.getBean(ParameterSelectionPanel.class, observation);
-    int result = JOptionPane.showConfirmDialog(mainWindow, selectionPanel, "Parameter 선택", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+    int result = JOptionPane.showConfirmDialog(mainWindow, selectionPanel, "Select Basic Parameters", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
     if (result != 0) {
       LOG.info("User cancels selection of parameter.");
       return null;
@@ -101,7 +101,7 @@ public class WooController {
     Date rangeEnd = selectionPanel.getRangeEnd();
     LOG.info("Selected date range (" + rangeStart + ", " + rangeEnd + ")");
     if (rangeStart == null || rangeEnd == null || rangeStart.compareTo(rangeEnd) > 0) {
-      JOptionPane.showMessageDialog(mainWindow, "날짜 범위가 잘못 되었습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(mainWindow, "Given date range is wrong!", "Error!", JOptionPane.ERROR_MESSAGE);
       return null;
     }
 
@@ -109,7 +109,7 @@ public class WooController {
     if (selected != -1) {
       return new Tuple3<>(selected, rangeStart, rangeEnd);
     } else {
-      JOptionPane.showMessageDialog(mainWindow, "Parameter를 선택하지 않았습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(mainWindow, "Some parameters are not selected!", "Error!", JOptionPane.ERROR_MESSAGE);
       return null;
     }
   }
@@ -149,8 +149,8 @@ public class WooController {
     }, new FailureCallback() {
       @Override
       public void onFailure(Throwable e) {
-        JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-        LOG.error("Drawing graph failed.", e);
+        JOptionPane.showMessageDialog(mainWindow, "Cannot calculate moving average!", "Error!", JOptionPane.ERROR_MESSAGE);
+        LOG.error("Calculation of moving average failed.", e);
       }
     });
   }
@@ -206,7 +206,7 @@ public class WooController {
         }, new FailureCallback() {
           @Override
           public void onFailure(Throwable e) {
-            JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(mainWindow, "Cannot filter data!", "Error!", JOptionPane.ERROR_MESSAGE);
             LOG.error("Drawing graph failed.", e);
           }
         });
@@ -214,7 +214,7 @@ public class WooController {
     }, new FailureCallback() {
       @Override
       public void onFailure(Throwable e) {
-        JOptionPane.showMessageDialog(mainWindow, "기본 통계량 계산에 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(mainWindow, "Cannot calculate of basic statistics data!", "Error!", JOptionPane.ERROR_MESSAGE);
         LOG.error("Calculation of basic analysis is failed.", e);
       }
     });
@@ -234,8 +234,8 @@ public class WooController {
       mainWindow.getDesktop().add(view);
       view.setSelected(true);
     } catch (PropertyVetoException e) {
-      JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error("Drawing graph failed.", e);
+      JOptionPane.showMessageDialog(mainWindow, "Fail to custom analysis", "Error!", JOptionPane.ERROR_MESSAGE);
+      LOG.error("Custom analysis failed.", e);
     }
   }
 }

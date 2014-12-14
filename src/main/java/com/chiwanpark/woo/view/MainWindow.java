@@ -47,7 +47,7 @@ public class MainWindow extends JFrame {
   public JMenuBar createMenu() {
     JMenuBar menuBar = new JMenuBar();
 
-    JMenu menuFile = new JMenu("파일");
+    JMenu menuFile = new JMenu("File");
     menuFile.add(createOpenDataItem());
     menuFile.add(createExitItem());
 
@@ -57,7 +57,7 @@ public class MainWindow extends JFrame {
   }
 
   public JMenuItem createOpenDataItem() {
-    JMenuItem item = new JMenuItem("자료 불러오기");
+    JMenuItem item = new JMenuItem("Open File");
 
     item.addActionListener(new ActionListener() {
       @Override
@@ -66,9 +66,9 @@ public class MainWindow extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         FileFilter fileFilter = new FileNameExtensionFilter("Excel Files (*.xls, *.xlsx)", "xls", "xlsx");
 
-        fileChooser.addChoosableFileFilter(fileFilter);
+        fileChooser.setFileFilter(fileFilter);
 
-        int result = fileChooser.showDialog(desktopPane, "자료 불러오기");
+        int result = fileChooser.showDialog(desktopPane, "Open File");
         if (result == JFileChooser.APPROVE_OPTION) {
           File openedFile = fileChooser.getSelectedFile();
           LOG.info("File Chosen: " + openedFile.getAbsolutePath());
@@ -82,7 +82,7 @@ public class MainWindow extends JFrame {
   }
 
   public JMenuItem createExitItem() {
-    JMenuItem item = new JMenuItem("종료");
+    JMenuItem item = new JMenuItem("Exit Program");
 
     item.addActionListener(new ActionListener() {
       @Override

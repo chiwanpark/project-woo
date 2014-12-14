@@ -21,7 +21,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="관측소명"/>
+              <text value="Observatory Name"/>
             </properties>
           </component>
           <component id="1e4ea" class="javax.swing.JTextField" binding="txtName">
@@ -39,7 +39,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="관측정"/>
+              <text value="Type"/>
             </properties>
           </component>
           <component id="95a93" class="javax.swing.JTextField" binding="txtType">
@@ -57,7 +57,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="해발고도"/>
+              <text value="Height"/>
             </properties>
           </component>
           <component id="e79e" class="javax.swing.JTextField" binding="txtHeight">
@@ -75,7 +75,7 @@
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="위도"/>
+              <text value="Latitude"/>
             </properties>
           </component>
           <component id="e64be" class="javax.swing.JTextField" binding="txtLatitude">
@@ -93,7 +93,7 @@
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="경도"/>
+              <text value="Longitude"/>
             </properties>
           </component>
           <component id="bb3cb" class="javax.swing.JTextField" binding="txtLongitude">
@@ -111,7 +111,7 @@
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="관측 기간"/>
+              <text value="Time Period"/>
             </properties>
           </component>
           <component id="f1d84" class="javax.swing.JTextField" binding="txtTimePeriod">

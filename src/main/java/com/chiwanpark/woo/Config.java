@@ -24,7 +24,7 @@ public class Config {
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   public static final Pattern POSITION_PATTERN = Pattern.compile("([0-9]+)도 ([0-9]+)분 ([0-9]+)초");
   public static final String DOUBLE_FORMAT = "%.6f";
-  public static final String POSITION_FORMAT = "%d도 %d분 %d초";
+  public static final String POSITION_FORMAT = "%d° %d' %d\"";
 
   @Bean
   public MainWindow mainWindow() {
