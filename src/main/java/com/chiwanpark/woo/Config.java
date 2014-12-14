@@ -95,6 +95,12 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  public ValueRangeParameterPanel valueRangeParameterPanel(Tuple4<Double, Double, Double, Double> statistics) {
+    return new ValueRangeParameterPanel(statistics);
+  }
+
+  @Bean
+  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   public InProgressDialog inProgressDialog() {
     return new InProgressDialog(mainWindow());
   }

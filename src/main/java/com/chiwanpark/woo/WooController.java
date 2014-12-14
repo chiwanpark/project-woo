@@ -118,7 +118,7 @@ public class WooController {
     final Tuple3<Integer, Date, Date> basicParameter = getBasicAnalysisParameter(observation);
 
     MovingAverageParameterPanel parameterPanel = context.getBean(MovingAverageParameterPanel.class);
-    int result = JOptionPane.showConfirmDialog(mainWindow, parameterPanel, "Set value range", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+    int result = JOptionPane.showConfirmDialog(mainWindow, parameterPanel, "Set date range", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
     if (result != 0) {
       LOG.info("User cancels selection of parameter.");
       return;
@@ -151,6 +151,71 @@ public class WooController {
       public void onFailure(Throwable e) {
         JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
         LOG.error("Drawing graph failed.", e);
+      }
+    });
+  }
+
+  public void filterValueRange(final Observation observation, final boolean inRange) {
+    final Tuple3<Integer, Date, Date> basicParameter = getBasicAnalysisParameter(observation);
+    if (basicParameter == null) {
+      LOG.info("User cancels selection of parameter.");
+      return;
+    }
+
+    backgroundTaskService.runTaskInBackgroundWithDialog(new Callable<Tuple4<Double, Double, Double, Double>>() {
+      @Override
+      public Tuple4<Double, Double, Double, Double> call() throws Exception {
+        return observation.getData().get(basicParameter.getV1()).dataInDateRange(basicParameter.getV2(), basicParameter.getV3()).getBasicAnalysis();
+      }
+    }, new SuccessCallback<Tuple4<Double, Double, Double, Double>>() {
+      @Override
+      public void onSuccess(Tuple4<Double, Double, Double, Double> value) {
+        final ValueRangeParameterPanel parameterPanel = context.getBean(ValueRangeParameterPanel.class, value);
+        int result = JOptionPane.showConfirmDialog(mainWindow, parameterPanel, "Set value range", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (result != 0) {
+          LOG.info("User cancels selection of parameter.");
+          return;
+        }
+
+        final Tuple2<Double, Double> parameter = parameterPanel.getParameter();
+        backgroundTaskService.runTaskInBackgroundWithDialog(new Callable<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+          @Override
+          public Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> call() throws Exception {
+            TimeSeriesData data = observation.getData().get(basicParameter.getV1()).dataInDateRange(basicParameter.getV2(), basicParameter.getV3());
+
+            if (inRange) {
+              data = data.dataInValueRange(parameter.getV1(), parameter.getV2());
+            } else {
+              data = data.dataExceptValueRange(parameter.getV1(), parameter.getV2());
+            }
+
+            return new Tuple2<>(data, data.getBasicAnalysis());
+          }
+        }, new SuccessCallback<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+          @Override
+          public void onSuccess(Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> output) {
+            TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), output.getV1(), output.getV2());
+            mainWindow.getDesktop().add(view);
+
+            try {
+              view.setSelected(true);
+            } catch (PropertyVetoException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        }, new FailureCallback() {
+          @Override
+          public void onFailure(Throwable e) {
+            JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+            LOG.error("Drawing graph failed.", e);
+          }
+        });
+      }
+    }, new FailureCallback() {
+      @Override
+      public void onFailure(Throwable e) {
+        JOptionPane.showMessageDialog(mainWindow, "기본 통계량 계산에 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        LOG.error("Calculation of basic analysis is failed.", e);
       }
     });
   }

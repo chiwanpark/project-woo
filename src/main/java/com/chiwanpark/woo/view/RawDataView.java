@@ -18,6 +18,8 @@ public class RawDataView extends JInternalFrame {
   private JButton btnAnalysis;
   private JPanel pnWrapInfo;
   private JButton btnMovingAverage;
+  private JButton btnInRange;
+  private JButton btnOutRange;
 
   private @Autowired WooController controller;
 
@@ -33,6 +35,8 @@ public class RawDataView extends JInternalFrame {
     createBtnGraphAction();
     createBtnAnalysisAction();
     createBtnMovingAverageAction();
+    createBtnInRangeAction();
+    createBtnOutRangeAction();
 
     setContentPane(pnContents);
     setSize(640, 480);
@@ -67,6 +71,24 @@ public class RawDataView extends JInternalFrame {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.calculateMovingAverage(observation);
+      }
+    });
+  }
+
+  private void createBtnInRangeAction() {
+    btnInRange.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.filterValueRange(observation, true);
+      }
+    });
+  }
+
+  private void createBtnOutRangeAction() {
+    btnOutRange.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.filterValueRange(observation, false);
       }
     });
   }
