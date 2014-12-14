@@ -30,7 +30,9 @@ public class ObservationInfoPanel extends JPanel {
     txtHeight.setText(String.format(Config.DOUBLE_FORMAT, info.getHeight()) + "m");
     txtLatitude.setText(info.getLatitude().toString(Config.POSITION_FORMAT));
     txtLongitude.setText(info.getLongitude().toString(Config.POSITION_FORMAT));
-    txtTimePeriod.setText(Config.DATE_FORMAT.format(dateStart) + " ~ " + Config.DATE_FORMAT.format(dateEnd));
-  }
 
+    if (dateStart != null && dateEnd != null) {
+      txtTimePeriod.setText(Config.DATE_FORMAT.format(dateStart) + " ~ " + Config.DATE_FORMAT.format(dateEnd));
+    }
+  }
 }
