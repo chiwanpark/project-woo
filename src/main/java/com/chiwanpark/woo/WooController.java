@@ -44,7 +44,7 @@ public class WooController {
       return;
     }
 
-    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, dataset.get(0).getName(), dataset);
+    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), dataset.get(0));
 
     try {
       mainWindow.getDesktop().add(view);
@@ -82,24 +82,6 @@ public class WooController {
     }
 
     return dataset;
-  }
-
-  public void calculateBasicStatistics(Observation observation) {
-    List<TimeSeriesData> dataset = getParameterizedDataSet(observation);
-    if (dataset == null) {
-      return;
-    }
-
-    TimeSeriesData data = dataset.get(0);
-
-    BasicStatisticsView view = context.getBean(BasicStatisticsView.class, observation, data);
-    try {
-      mainWindow.getDesktop().add(view);
-      view.setSelected(true);
-    } catch (PropertyVetoException e) {
-      JOptionPane.showMessageDialog(mainWindow, "기본 통계량을 계산하는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error("Calculate basic statistics failed.", e);
-    }
   }
 
   public void doAnalysis(Observation observation) {

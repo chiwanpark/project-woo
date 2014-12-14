@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class TimeSeriesChartView extends JInternalFrame {
@@ -36,13 +35,14 @@ public class TimeSeriesChartView extends JInternalFrame {
   private JPanel pnContents;
   private JButton btnSaveGraph;
   private JPanel pnChartWrap;
+  private JPanel pnWrapInfo;
 
   private ChartPanel pnChart;
 
-  public TimeSeriesChartView(String title, List<TimeSeriesData> dataset) {
-    super("Graph - " + title);
+  public TimeSeriesChartView(TimeSeriesData data) {
+    super("Graph - " + data.getName());
 
-    XYDataset jfreeDataset = createDataSet(dataset);
+    XYDataset jfreeDataset = createDataSet(data);
     pnChart = createChart(title, jfreeDataset);
 
     pnChartWrap.setLayout(new BoxLayout(pnChartWrap, BoxLayout.PAGE_AXIS));
@@ -51,24 +51,27 @@ public class TimeSeriesChartView extends JInternalFrame {
     addSaveGraphAction();
 
     setContentPane(pnContents);
-    setSize(640, 320);
+    setSize(640, 640);
     setMaximizable(true);
     setVisible(true);
     setClosable(true);
     setResizable(true);
   }
 
-  private XYDataset createDataSet(List<TimeSeriesData> dataset) {
+  public void setInfoPanel(ObservationInfoPanel infoPanel) {
+    pnWrapInfo.setLayout(new BoxLayout(pnWrapInfo, BoxLayout.LINE_AXIS));
+    pnWrapInfo.add(infoPanel);
+  }
+
+  private XYDataset createDataSet(TimeSeriesData data) {
     TimeSeriesCollection collection = new TimeSeriesCollection();
 
-    for (TimeSeriesData data : dataset) {
-      TimeSeries series = new TimeSeries(data.getName());
-      for (Date date : data.keySet()) {
-        series.add(new Second(date), data.get(date));
-      }
-
-      collection.addSeries(series);
+    TimeSeries series = new TimeSeries(data.getName());
+    for (Date date : data.keySet()) {
+      series.add(new Second(date), data.get(date));
     }
+
+    collection.addSeries(series);
 
     return collection;
   }

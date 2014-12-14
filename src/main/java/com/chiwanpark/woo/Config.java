@@ -1,6 +1,7 @@
 package com.chiwanpark.woo;
 
 import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.ObservationInfo;
 import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.*;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.regex.Pattern;
 
 @Configuration
@@ -38,13 +38,25 @@ public class Config {
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   public RawDataView rawDataView(Observation observation) {
-    return new RawDataView(observation);
+    ObservationInfoPanel infoPanel = observationInfoPanel();
+    infoPanel.setInfo(observation.getInfo(), observation.getDateStart(), observation.getDateEnd());
+
+    RawDataView view = new RawDataView(observation);
+    view.setInfoPanel(infoPanel);
+
+    return view;
   }
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  public TimeSeriesChartView timeSeriesChartView(String title, List<TimeSeriesData> dataset) {
-    return new TimeSeriesChartView(title, dataset);
+  public TimeSeriesChartView timeSeriesChartView(ObservationInfo info, TimeSeriesData data) {
+    ObservationInfoPanel infoPanel = observationInfoPanel();
+    infoPanel.setInfo(info, data.getDateStart(), data.getDateEnd());
+
+    TimeSeriesChartView view = new TimeSeriesChartView(data);
+    view.setInfoPanel(infoPanel);
+
+    return view;
   }
 
   @Bean
@@ -55,7 +67,7 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  public BasicStatisticsView basicStatisticsView(Observation observation, TimeSeriesData data) {
-    return new BasicStatisticsView(observation, data);
+  public ObservationInfoPanel observationInfoPanel() {
+    return new ObservationInfoPanel();
   }
 }

@@ -5,11 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Observation {
-  private String name;
-  private String type;
-  private double height;
-  private Tuple3<Integer, Integer, Integer> longitude;
-  private Tuple3<Integer, Integer, Integer> latitude;
+  private ObservationInfo info;
 
   private Date dateStart;
   private Date dateEnd;
@@ -22,44 +18,12 @@ public class Observation {
     dateEnd = null;
   }
 
-  public String getName() {
-    return name;
+  public ObservationInfo getInfo() {
+    return info;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public double getHeight() {
-    return height;
-  }
-
-  public void setHeight(double height) {
-    this.height = height;
-  }
-
-  public Tuple3<Integer, Integer, Integer> getLongitude() {
-    return longitude;
-  }
-
-  public void setLongitude(Tuple3<Integer, Integer, Integer> longitude) {
-    this.longitude = longitude;
-  }
-
-  public Tuple3<Integer, Integer, Integer> getLatitude() {
-    return latitude;
-  }
-
-  public void setLatitude(Tuple3<Integer, Integer, Integer> latitude) {
-    this.latitude = latitude;
+  public void setInfo(ObservationInfo info) {
+    this.info = info;
   }
 
   public void insertData(TimeSeriesData data) {

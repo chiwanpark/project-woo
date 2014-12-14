@@ -2,6 +2,7 @@ package com.chiwanpark.woo.service;
 
 import com.chiwanpark.woo.Config;
 import com.chiwanpark.woo.model.Observation;
+import com.chiwanpark.woo.model.ObservationInfo;
 import com.chiwanpark.woo.model.TimeSeriesData;
 import com.chiwanpark.woo.model.Tuple3;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -26,12 +27,15 @@ public class ExcelLoaderService {
     Sheet sheet = workbook.getSheetAt(0);
 
     Observation observation = new Observation();
+    ObservationInfo info = new ObservationInfo();
 
-    observation.setName(getObservationName(sheet));
-    observation.setType(getObservationType(sheet));
-    observation.setHeight(getObservationHeight(sheet));
-    observation.setLatitude(getObservationLatitude(sheet));
-    observation.setLongitude(getObservationLongitude(sheet));
+    info.setName(getObservationName(sheet));
+    info.setType(getObservationType(sheet));
+    info.setHeight(getObservationHeight(sheet));
+    info.setLatitude(getObservationLatitude(sheet));
+    info.setLongitude(getObservationLongitude(sheet));
+
+    observation.setInfo(info);
 
     Row headerRow = sheet.getRow(6);
     for (int c = 4; c <= 7 && c < headerRow.getLastCellNum() && headerRow.getCell(c) != null; ++c) {
