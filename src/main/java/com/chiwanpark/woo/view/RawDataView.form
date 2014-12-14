@@ -48,6 +48,12 @@
               <text value="그래프 보기"/>
             </properties>
           </component>
+          <component id="eea17" class="javax.swing.JButton" binding="btnMovingAverage">
+            <constraints/>
+            <properties>
+              <text value="Moving Average"/>
+            </properties>
+          </component>
           <component id="9edbd" class="javax.swing.JButton" binding="btnAnalysis">
             <constraints/>
             <properties>

@@ -3,10 +3,7 @@ package com.chiwanpark.woo;
 import com.chiwanpark.woo.model.*;
 import com.chiwanpark.woo.service.BackgroundTaskService;
 import com.chiwanpark.woo.service.ExcelLoaderService;
-import com.chiwanpark.woo.view.MainWindow;
-import com.chiwanpark.woo.view.ParameterSelectionPanel;
-import com.chiwanpark.woo.view.RawDataView;
-import com.chiwanpark.woo.view.TimeSeriesChartView;
+import com.chiwanpark.woo.view.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,10 +64,9 @@ public class WooController {
     backgroundTaskService.runTaskInBackgroundWithDialog(new Callable<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
       @Override
       public Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> call() throws Exception {
-        TimeSeriesData data = observation.getData().get(parameter.getV1()).filterByDate(parameter.getV2(), parameter.getV3());
-        Tuple4<Double, Double, Double, Double> statistics = new Tuple4<>(data.getMinimum(), data.getMaximum(), data.getAverage(), data.getStdDeviation());
+        TimeSeriesData data = observation.getData().get(parameter.getV1()).dataInDateRange(parameter.getV2(), parameter.getV3());
 
-        return new Tuple2<>(data, statistics);
+        return new Tuple2<>(data, data.getBasicAnalysis());
       }
     }, new SuccessCallback<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
       @Override
@@ -118,13 +114,54 @@ public class WooController {
     }
   }
 
+  public void calculateMovingAverage(final Observation observation) {
+    final Tuple3<Integer, Date, Date> basicParameter = getBasicAnalysisParameter(observation);
+
+    MovingAverageParameterPanel parameterPanel = context.getBean(MovingAverageParameterPanel.class);
+    int result = JOptionPane.showConfirmDialog(mainWindow, parameterPanel, "Set value range", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+    if (result != 0) {
+      LOG.info("User cancels selection of parameter.");
+      return;
+    }
+
+    final Tuple2<Integer, Integer> timeParameter = parameterPanel.getParameter();
+
+    backgroundTaskService.runTaskInBackground(new Callable<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+      @Override
+      public Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> call() throws Exception {
+        TimeSeriesData data = observation.getData().get(basicParameter.getV1()).dataInDateRange(basicParameter.getV2(), basicParameter.getV3())
+            .movingAverage(timeParameter.getV1(), timeParameter.getV2());
+
+        return new Tuple2<>(data, data.getBasicAnalysis());
+      }
+    }, new SuccessCallback<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+      @Override
+      public void onSuccess(Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> output) {
+        TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), output.getV1(), output.getV2());
+        mainWindow.getDesktop().add(view);
+
+        try {
+          view.setSelected(true);
+        } catch (PropertyVetoException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, new FailureCallback() {
+      @Override
+      public void onFailure(Throwable e) {
+        JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        LOG.error("Drawing graph failed.", e);
+      }
+    });
+  }
+
   public void doAnalysis(Observation observation) {
     Tuple3<Integer, Date, Date> parameter = getBasicAnalysisParameter(observation);
     if (parameter == null) {
       return;
     }
 
-    TimeSeriesData result = observation.getData().get(parameter.getV1()).filterByDate(parameter.getV2(), parameter.getV3()).customAnalysis();
+    TimeSeriesData result = observation.getData().get(parameter.getV1()).dataInDateRange(parameter.getV2(), parameter.getV3()).customAnalysis();
 
     TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), result);
 

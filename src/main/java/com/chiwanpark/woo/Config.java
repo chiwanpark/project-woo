@@ -89,6 +89,12 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+  public MovingAverageParameterPanel movingAverageParameterPanel() {
+    return new MovingAverageParameterPanel();
+  }
+
+  @Bean
+  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   public InProgressDialog inProgressDialog() {
     return new InProgressDialog(mainWindow());
   }
