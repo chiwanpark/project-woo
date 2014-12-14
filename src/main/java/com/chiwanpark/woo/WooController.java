@@ -1,8 +1,6 @@
 package com.chiwanpark.woo;
 
-import com.chiwanpark.woo.model.Observation;
-import com.chiwanpark.woo.model.TimeSeriesData;
-import com.chiwanpark.woo.model.Tuple3;
+import com.chiwanpark.woo.model.*;
 import com.chiwanpark.woo.service.BackgroundTaskService;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.MainWindow;
@@ -60,21 +58,39 @@ public class WooController {
     });
   }
 
-  public void drawGraphFromRawObservation(Observation observation) {
+  public void drawGraphFromRawObservation(final Observation observation) {
     final Tuple3<Integer, Date, Date> parameter = getBasicAnalysisParameter(observation);
     if (parameter == null) {
       return;
     }
 
-    TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), observation.getData().get(parameter.getV1()));
+    backgroundTaskService.runTaskInBackgroundWithDialog(new Callable<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+      @Override
+      public Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> call() throws Exception {
+        TimeSeriesData data = observation.getData().get(parameter.getV1()).filterByDate(parameter.getV2(), parameter.getV3());
+        Tuple4<Double, Double, Double, Double> statistics = new Tuple4<>(data.getMinimum(), data.getMaximum(), data.getAverage(), data.getStdDeviation());
 
-    try {
-      mainWindow.getDesktop().add(view);
-      view.setSelected(true);
-    } catch (PropertyVetoException e) {
-      JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
-      LOG.error("Drawing graph failed.", e);
-    }
+        return new Tuple2<>(data, statistics);
+      }
+    }, new SuccessCallback<Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>>>() {
+      @Override
+      public void onSuccess(Tuple2<TimeSeriesData, Tuple4<Double, Double, Double, Double>> output) {
+        TimeSeriesChartView view = context.getBean(TimeSeriesChartView.class, observation.getInfo(), output.getV1(), output.getV2());
+        mainWindow.getDesktop().add(view);
+
+        try {
+          view.setSelected(true);
+        } catch (PropertyVetoException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }, new FailureCallback() {
+      @Override
+      public void onFailure(Throwable e) {
+        JOptionPane.showMessageDialog(mainWindow, "그래프를 그리는데 실패했습니다!", "오류!", JOptionPane.ERROR_MESSAGE);
+        LOG.error("Drawing graph failed.", e);
+      }
+    });
   }
 
   private Tuple3<Integer, Date, Date> getBasicAnalysisParameter(Observation observation) {

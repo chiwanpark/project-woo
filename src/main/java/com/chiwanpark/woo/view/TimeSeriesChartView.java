@@ -1,6 +1,8 @@
 package com.chiwanpark.woo.view;
 
+import com.chiwanpark.woo.Config;
 import com.chiwanpark.woo.model.TimeSeriesData;
+import com.chiwanpark.woo.model.Tuple4;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -36,11 +38,20 @@ public class TimeSeriesChartView extends JInternalFrame {
   private JButton btnSaveGraph;
   private JPanel pnChartWrap;
   private JPanel pnWrapInfo;
+  private JTextField txtMinimum;
+  private JTextField txtMaximum;
+  private JTextField txtAverage;
+  private JTextField txtStdDeviation;
 
   private ChartPanel pnChart;
 
-  public TimeSeriesChartView(TimeSeriesData data) {
+  public TimeSeriesChartView(TimeSeriesData data, Tuple4<Double, Double, Double, Double> statistics) {
     super("Graph - " + data.getName());
+
+    txtMinimum.setText(String.format(Config.DOUBLE_FORMAT, statistics.getV1()));
+    txtMaximum.setText(String.format(Config.DOUBLE_FORMAT, statistics.getV2()));
+    txtAverage.setText(String.format(Config.DOUBLE_FORMAT, statistics.getV3()));
+    txtStdDeviation.setText(String.format(Config.DOUBLE_FORMAT, statistics.getV4()));
 
     XYDataset jfreeDataset = createDataSet(data);
     pnChart = createChart(title, jfreeDataset);
@@ -51,7 +62,7 @@ public class TimeSeriesChartView extends JInternalFrame {
     addSaveGraphAction();
 
     setContentPane(pnContents);
-    setSize(640, 640);
+    pack();
     setMaximizable(true);
     setVisible(true);
     setClosable(true);

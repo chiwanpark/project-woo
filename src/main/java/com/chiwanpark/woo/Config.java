@@ -3,6 +3,7 @@ package com.chiwanpark.woo;
 import com.chiwanpark.woo.model.Observation;
 import com.chiwanpark.woo.model.ObservationInfo;
 import com.chiwanpark.woo.model.TimeSeriesData;
+import com.chiwanpark.woo.model.Tuple4;
 import com.chiwanpark.woo.service.BackgroundTaskService;
 import com.chiwanpark.woo.service.ExcelLoaderService;
 import com.chiwanpark.woo.view.*;
@@ -64,11 +65,11 @@ public class Config {
 
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-  public TimeSeriesChartView timeSeriesChartView(ObservationInfo info, TimeSeriesData data) {
+  public TimeSeriesChartView timeSeriesChartView(ObservationInfo info, TimeSeriesData data, Tuple4<Double, Double, Double, Double> statistics) {
     ObservationInfoPanel infoPanel = observationInfoPanel();
     infoPanel.setInfo(info, data.getDateStart(), data.getDateEnd());
 
-    TimeSeriesChartView view = new TimeSeriesChartView(data);
+    TimeSeriesChartView view = new TimeSeriesChartView(data, statistics);
     view.setInfoPanel(infoPanel);
 
     return view;
